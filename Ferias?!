@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Agenda Escolar</title>
+
+<meta name="theme-color" content="#2563eb">
+<meta name="description" content="Agenda Escolar para organizar tarefas, provas e trabalhos">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+header {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 35px 20px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: auto;
+}
+
+header h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+header p {
+    opacity: .9;
+}
+
+main {
+    margin-top: 25px;
+    margin-bottom: 40px;
+}
+
+/* DASHBOARD */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.06);
+}
+
+.card h3 {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.card span {
+    color: #2563eb;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* FORM */
+
+.form {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    margin-bottom: 30px;
+}
+
+.form h2 {
+    margin-bottom: 20px;
+}
+
+.inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #2563eb;
+}
+
+button {
+    border: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-weight: bold;
+}
+
+.btn-add {
+    width: 100%;
+    margin-top: 15px;
+    background: #2563eb;
+    color: white;
+}
+
+.btn-add:hover {
+    background: #1d4ed8;
+}
+
+/* ATIVIDADES */
+
+.tarefas {
+    display: grid;
+    gap: 15px;
+}
+
+.tarefa {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.05);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.tarefa h3 {
+    margin-bottom: 8px;
+}
+
+.tarefa p {
+    color: #64748b;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.tipo {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1d4ed8;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.btn-delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.btn-delete:hover {
+    background: #fecaca;
+}
+
+.vazio {
+    background: white;
+    padding: 40px;
+    text-align: center;
+    border-radius: 12px;
+    color: #64748b;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 700px) {
+
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .tarefa {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-delete {
+        width: 100%;
+    }
+
+    header h1 {
+        font-size: 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="container">
+
+        <h1>📚 Agenda Escolar</h1>
+
+        <p>
+            Organize suas tarefas, provas e trabalhos em um só lugar.
+        </p>
+
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- DASHBOARD -->
+
+    <section class="dashboard">
+
+        <div class="card">
+            <h3>Total de atividades</h3>
+            <span id="total">0</span>
+        </div>
+
+        <div class="card">
+            <h3>Provas</h3>
+            <span id="provas">0</span>
+        </div>
+
+        <div class="card">
+            <h3>Trabalhos</h3>
+            <span id="trabalhos">0</span>
+        </div>
+
+    </section>
+
+
+    <!-- FORMULÁRIO -->
+
+    <section class="form">
+
+        <h2>➕ Nova atividade</h2>
+
+        <div class="inputs">
+
+            <input
+                id="titulo"
+                type="text"
+                placeholder="Nome da atividade"
+            >
+
+            <input
+                id="materia"
+                type="text"
+                placeholder="Matéria"
+            >
+
+            <select id="tipo">
+
+                <option value="Tarefa">
+                    Tarefa
+                </option>
+
+                <option value="Prova">
+                    Prova
+                </option>
+
+                <option value="Trabalho">
+                    Trabalho
+                </option>
+
+                <option value="Projeto">
+                    Projeto
+                </option>
+
+            </select>
+
+            <input
+                id="data"
+                type="date"
+            >
+
+        </div>
+
+        <button
+            class="btn-add"
+            onclick="adicionarAtividade()">
+
+            Adicionar atividade
+
+        </button>
+
+    </section>
+
+
+    <!-- LISTA -->
+
+    <section>
+
+        <h2 style="margin-bottom:15px;">
+            📋 Minhas atividades
+        </h2>
+
+        <div
+            id="lista"
+            class="tarefas">
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    Agenda Escolar • Projeto desenvolvido com HTML, CSS, JavaScript e IA
+
+</footer>
+
+
+<script>
+
+/* ==========================================
+   SISTEMA DE DADOS
+========================================== */
+
+let atividades =
+    JSON.parse(localStorage.getItem("atividades"))
+    || [];
+
+
+/* ==========================================
+   SALVAR
+========================================== */
+
+function salvar() {
+
+    localStorage.setItem(
+        "atividades",
+        JSON.stringify(atividades)
+    );
+
+}
+
+
+/* ==========================================
+   ADICIONAR
+========================================== */
+
+function adicionarAtividade() {
+
+    const titulo =
+        document.getElementById("titulo").value.trim();
+
+    const materia =
+        document.getElementById("materia").value.trim();
+
+    const tipo =
+        document.getElementById("tipo").value;
+
+    const data =
+        document.getElementById("data").value;
+
+
+    if (
+        titulo === "" ||
+        materia === "" ||
+        data === ""
+    ) {
+
+        alert("Preencha todos os campos.");
+
+        return;
+    }
+
+
+    const atividade = {
+
+        id: Date.now(),
+
+        titulo: titulo,
+
+        materia: materia,
+
+        tipo: tipo,
+
+        data: data
+
+    };
+
+
+    atividades.push(atividade);
+
+    salvar();
+
+    atualizarTela();
+
+
+    document.getElementById("titulo").value = "";
+
+    document.getElementById("materia").value = "";
+
+    document.getElementById("data").value = "";
+
+}
+
+
+/* ==========================================
+   EXCLUIR
+========================================== */
+
+function excluirAtividade(id) {
+
+    atividades =
+        atividades.filter(
+            atividade =>
+            atividade.id !== id
+        );
+
+    salvar();
+
+    atualizarTela();
+
+}
+
+
+/* ==========================================
+   FORMATAR DATA
+========================================== */
+
+function formatarData(data) {
+
+    const partes =
+        data.split("-");
+
+    return (
+        partes[2] +
+        "/" +
+        partes[1] +
+        "/" +
+        partes[0]
+    );
+
+}
+
+
+/* ==========================================
+   ATUALIZAR DASHBOARD
+========================================== */
+
+function atualizarDashboard() {
+
+    document.getElementById("total")
+        .textContent =
+        atividades.length;
+
+
+    document.getElementById("provas")
+        .textContent =
+        atividades.filter(
+            a => a.tipo === "Prova"
+        ).length;
+
+
+    document.getElementById("trabalhos")
+        .textContent =
+        atividades.filter(
+            a => a.tipo === "Trabalho"
+        ).length;
+
+}
+
+
+/* ==========================================
+   ATUALIZAR LISTA
+========================================== */
+
+function atualizarTela() {
+
+    const lista =
+        document.getElementById("lista");
+
+    lista.innerHTML = "";
+
+
+    atualizarDashboard();
+
+
+    if (atividades.length === 0) {
+
+        lista.innerHTML = `
+
+            <div class="vazio">
+
+                📭 Nenhuma atividade cadastrada.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    atividades.sort(
+        (a, b) =>
+        a.data.localeCompare(b.data)
+    );
+
+
+    atividades.forEach(
+        atividade => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "tarefa";
+
+
+            div.innerHTML = `
+
+                <div>
+
+                    <span class="tipo">
+
+                        ${atividade.tipo}
+
+                    </span>
+
+                    <h3>
+
+                        ${atividade.titulo}
+
+                    </h3>
+
+                    <p>
+
+                        📖 Matéria:
+                        ${atividade.materia}
+
+                    </p>
+
+                    <p>
+
+                        📅 Data:
+                        ${formatarData(atividade.data)}
+
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="btn-delete"
+                    onclick="excluirAtividade(${atividade.id})">
+
+                    Excluir
+
+                </button>
+
+            `;
+
+
+            lista.appendChild(div);
+
+        }
+    );
+
+}
+
+
+/* ==========================================
+   INICIAR
+========================================== */
+
+atualizarTela();
+
+
+/* ==========================================
+   INSTALAÇÃO PWA
+========================================== */
+
+/*
+    O navegador pode oferecer a instalação
+    quando a aplicação estiver publicada
+    em HTTPS e possuir um manifest/service worker.
+
+    Esta versão continua funcionando normalmente
+    como aplicação web usando um único HTML.
+*/
+
+
+let eventoInstalacao = null;
+
+
+window.addEventListener(
+    "beforeinstallprompt",
+    function(event) {
+
+        event.preventDefault();
+
+        eventoInstalacao = event;
+
+        console.log(
+            "Aplicação pronta para instalação."
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>
